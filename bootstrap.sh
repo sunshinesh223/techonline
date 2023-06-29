@@ -17,6 +17,10 @@ while true; do
     break
   fi
 done
+
+#get the country information
+land=$(curl ipinfo.io | grep country |cut -d '"' -f 4)
+
 # Clone the repository
 git clone https://github.com/kylemanna/docker-openvpn.git
 # Change current directory to the cloned repository
@@ -63,13 +67,14 @@ for i in xp zt xw; do
 EOF
 done
 
+
 # Generate a configuration file for the user
 for i in xp zt xw; do
 docker run -v $PWD/vpn-data-443:/etc/openvpn --rm myownvpn ovpn_getclient $i > $i.ovpn
 sed -i 's/redirect-gateway def1/route 192.168.0.0\/24 255.255.0.0/g' $i.ovpn
 echo "redirect-gateway def1" >> $i.ovpn
-mv $i.ovpn /home/ec2-user/$i.ovpn
-chown ec2-user /home/ec2-user/$i.ovpn
+mv $i.ovpn /home/ec2-user/$i-$land.ovpn
+chown ec2-user /home/ec2-user/$i-$land.ovpn
 done
 
 # Enable IP forwarding
