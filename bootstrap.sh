@@ -56,7 +56,7 @@ EOF
 docker run -v $PWD/vpn-data-443:/etc/openvpn -d -p 443:1194/udp --cap-add=NET_ADMIN myownvpn
 
 # Create a user for the VPN connection
-for i in xp zt xw; do
+for i in xp zt xw ruimin; do
   /usr/bin/expect <<EOF
   set timeout 600
 
@@ -69,7 +69,7 @@ done
 
 
 # Generate a configuration file for the user
-for i in xp zt xw; do
+for i in xp zt xw ruimin; do
 docker run -v $PWD/vpn-data-443:/etc/openvpn --rm myownvpn ovpn_getclient $i > $i.ovpn
 sed -i 's/redirect-gateway def1/route 192.168.0.0\/24 255.255.0.0/g' $i.ovpn
 echo "redirect-gateway def1" >> $i.ovpn
